@@ -1,89 +1,811 @@
-html, body {
-    overflow: hidden;
-    background: rgb(204, 156, 156)
-}
+/* PAGE SETUP
+   Keep these three rules in the live-coding copy. */
+      html,
+      body {
+         overflow: hidden;
+         margin: 0;
+      }
 
-.turkey {
-    --brown1: #753;
-    --brown2: #975;
-    --orange1: orange;
-    --orange2: darkorange;
-    width: 80vmin;
-    height: 80vmin;
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%)
-}
+      body {
+         position: relative;
+         min-height: 100vh;
+         background:
+            linear-gradient(rgba(62, 68, 57, 0.25), rgba(158, 145, 112, 0.18)),
+            radial-gradient(circle at 15% 72%, #5d5141 0 1.2vmin, transparent 1.3vmin),
+            radial-gradient(circle at 82% 66%, #655842 0 1.6vmin, transparent 1.7vmin),
+            radial-gradient(circle at 73% 80%, #4c4235 0 0.9vmin, transparent 1vmin),
+            linear-gradient(170deg, transparent 0 58%, rgba(38, 43, 31, 0.65) 58.2% 59%, transparent 59.2%),
+            linear-gradient(10deg, transparent 0 63%, rgba(48, 49, 36, 0.55) 63.2% 64%, transparent 64.2%),
+            linear-gradient(#7f8a72 0 68%, #75694f 68% 100%);
+      }
 
-.turkey div {
-    position: absolute;
-    box-sizing: border-box;
-}
+      .battlefield {
+         position: fixed;
+         inset: 0;
+         z-index: 5;
+         pointer-events: none;
+      }
 
-/* Step 1 build the body */
-.body {
-    width: 40%;
-    height: 40%;
-    background: var(--brown1);
-    color: var(--brown1);
-    border-radius: 50%;
-    top:40%;
-    left:50%;
-    transform: translate(-50%,0);
-    box-shadow:
-    -4vmin 14.5vmin 0 -13vmin,
-    4vmin 14.5vmin 0 -13vmin
-}
+      .ruins {
+         position: absolute;
+         bottom: 24vmin;
+         width: 32vmin;
+         height: 34vmin;
+         opacity: 0.88;
+         filter: drop-shadow(1vmin 1vmin 0 rgba(25, 26, 22, 0.45));
+      }
 
-.wings {
-    background: var(--brown2);
-    height: 30%;
-    width:20%;
-    transform-origin: top right;
-    top: 41.25%;
-    left:23%;
-    border-radius: 100% 0% 100% 5%;
-    transform: rotate(-10deg);
-}
+      .ruins-left {
+         left: -2vmin;
+      }
 
-.wings + .wings {
-    left: auto;
-    right: 43%;
-    transform: scaleX(-1) rotate(-10deg);
-}
+      .ruins-right {
+         right: -2vmin;
+         transform: scaleX(-1);
+      }
 
-.head {
-    height: 19%;
-    width: 19%;
-    border-radius: 50%;
-    top:15%;
-    left:50%;
-    transform: translate(-50%, 0);
-    background: var(--brown2);
-    clip-path: polygon(0% 20%, 100% 20%, 100% 500%, 0% 500%);
-}
+      .building {
+         position: absolute;
+         bottom: 0;
+         border: 0.6vmin solid #37372f;
+         background:
+            linear-gradient(135deg, transparent 0 48%, rgba(26, 27, 23, 0.35) 49% 51%, transparent 52%),
+            radial-gradient(circle at 25% 25%, #5f604f 0 0.25vmin, transparent 0.35vmin),
+            repeating-linear-gradient(
+               90deg,
+               transparent 0 2.8vmin,
+               rgba(35, 36, 31, 0.7) 2.9vmin 3.2vmin
+            ),
+            repeating-linear-gradient(
+               0deg,
+               #777767 0 4vmin,
+               #55574b 4.1vmin 4.5vmin
+            );
+         box-shadow: inset 1vmin 0 2vmin rgba(20, 21, 18, 0.35);
+      }
 
-.head:before {
-    content: "";
-    display: block;
-    position: absolute;
-    background: var(--brown2);
-    height: 120%;
-    width: 40%;
-    top:80%;
-    left:50%;
-    transform: translate(-50%, 0);
-    border-radius: 0 0 100% 100% / 30%;
-}
+      .building::before {
+         content: "";
+         position: absolute;
+         inset: 4vmin 3vmin 8vmin;
+         background:
+            repeating-linear-gradient(90deg,
+               #252a25 0 2vmin,
+               transparent 2vmin 4vmin),
+            repeating-linear-gradient(0deg,
+               #252a25 0 2.5vmin,
+               transparent 2.5vmin 5vmin);
+         opacity: 0.9;
+      }
 
-.eye {
-    width: 10%;
-    height: 10%;
-    background: black;
-    border-radius: 50%;
-    transform: translate(-50%, 0) translate(-2.5vmin, 0);
-    top: 20%;
-    left:50%;
-    box-shadow:5vmin 0;
-}
+      .building::after {
+         content: "";
+         position: absolute;
+         left: -0.7vmin;
+         right: -0.7vmin;
+         bottom: -0.7vmin;
+         height: 3vmin;
+         background:
+            linear-gradient(155deg,
+               transparent 0 35%,
+               #37372f 36% 52%,
+               transparent 53%),
+            #504e40;
+      }
+
+      .building-one {
+         left: 0;
+         width: 15vmin;
+         height: 24vmin;
+         clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%);
+      }
+
+      .building-two {
+         right: 0;
+         width: 18vmin;
+         height: 31vmin;
+         clip-path: polygon(8% 0, 100% 8%, 92% 100%, 0 100%);
+      }
+
+      .building-three {
+         left: 0;
+         width: 18vmin;
+         height: 29vmin;
+         clip-path: polygon(0 7%, 88% 0, 100% 100%, 0 100%);
+      }
+
+      .building-four {
+         right: 0;
+         width: 15vmin;
+         height: 21vmin;
+         clip-path: polygon(12% 0, 100% 11%, 100% 100%, 0 100%);
+      }
+
+      .tank {
+         position: absolute;
+         bottom: 5vmin;
+         width: 20vmin;
+         height: 7vmin;
+         border: 0.7vmin solid #171914;
+         border-radius: 2.5vmin 2.5vmin 1vmin 1vmin;
+         background:
+            radial-gradient(circle at 15% 50%, #1a1c18 0 1vmin, #4b5540 1.1vmin 1.8vmin, transparent 1.9vmin),
+            radial-gradient(circle at 38% 50%, #1a1c18 0 1vmin, #4b5540 1.1vmin 1.8vmin, transparent 1.9vmin),
+            radial-gradient(circle at 62% 50%, #1a1c18 0 1vmin, #4b5540 1.1vmin 1.8vmin, transparent 1.9vmin),
+            radial-gradient(circle at 85% 50%, #1a1c18 0 1vmin, #4b5540 1.1vmin 1.8vmin, transparent 1.9vmin),
+            linear-gradient(#59694a 0 55%, #252b21 56% 100%);
+         box-shadow: 0 1vmin 0 #25251f;
+      }
+
+      .tank-left {
+         left: 2vmin;
+      }
+
+      .tank-right {
+         right: 2vmin;
+         transform: scaleX(-1);
+      }
+
+      .tank-turret {
+         position: absolute;
+         width: 10vmin;
+         height: 5vmin;
+         left: 6vmin;
+         bottom: 5.4vmin;
+         border: 0.6vmin solid #171914;
+         border-radius: 50% 50% 15% 15%;
+         background: #59694a;
+      }
+
+      .tank-barrel {
+         position: absolute;
+         width: 10vmin;
+         height: 1.5vmin;
+         left: 13vmin;
+         bottom: 8vmin;
+         border: 0.4vmin solid #171914;
+         border-radius: 0 1vmin 1vmin 0;
+         background: #3f4836;
+         transform: rotate(-8deg);
+         transform-origin: left center;
+      }
+
+      /* Reuse the palette below. Both sides use vmin, so the square scales
+   with the shorter side of the browser window. top and left put its
+   corner at the center. translate pulls it back by half its own size. */
+      .cartoon {
+         --brown1: #753;
+         --brown2: #975;
+         --orange1: orange;
+         --orange2: darkorange;
+         --army-green: #3f5032;
+         --army-dark: #283526;
+         width: 80vmin;
+         height: 80vmin;
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         z-index: 10;
+      }
+
+      .title {
+         position: absolute;
+         width: 100%;
+         margin: 0;
+         top: 1%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         text-align: center;
+         font-family: Impact, "Arial Black", sans-serif;
+         font-size: 9vmin;
+         font-weight: 900;
+         line-height: 1;
+         letter-spacing: 0.45vmin;
+         color: #000;
+         text-transform: uppercase;
+         text-shadow: 0.25vmin 0.25vmin 0 rgba(255, 255, 255, 0.35);
+         z-index: 30;
+         white-space: nowrap;
+      }
+
+      /* Absolute positioning lets the parts overlap. Offsets use the nearest
+   positioned ancestor. Most parts use .cartoon. The face uses .head
+   because its parts are nested inside it. border-box keeps borders
+   inside the declared width and height. */
+      .cartoon div {
+         position: absolute;
+         box-sizing: border-box;
+      }
+
+      /* STEP 1 | BODY
+   Width and height are both 40% of the square canvas. Set the color
+   and refresh to see the square, then use border-radius to round it. */
+      .body {
+         width: 40%;
+         height: 40%;
+         background: var(--brown1);
+         color: var(--brown1);
+         border-radius: 50%;
+         /* left measures from the canvas. translate measures from the body.
+    Together they center the body horizontally. */
+         top: 40%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         /* Two sharp shadows shrink and shift down to add small details where
+    the legs meet the body. They pick up the CSS color. */
+         box-shadow:
+            -4vmin 14.5vmin 0 -13vmin,
+            4vmin 14.5vmin 0 -13vmin
+      }
+
+      /* STEP 2 | WINGS
+   Rounded and sharp corners shape the wing. Use the top-right corner
+   as the pivot so the wing tilts from where it meets the body. */
+      .wing {
+         height: 30%;
+         width: 20%;
+         background: var(--brown2);
+         border-radius: 100% 0% 100% 5%;
+         top: 41%;
+         left: 23%;
+         transform-origin: top right;
+         transform: rotate(-10deg);
+      }
+
+      /* The + selects the wing immediately after the first one. left: auto
+   clears the shared left offset so right can place it. scaleX(-1)
+   mirrors both the shape and its tilt. */
+      .wing+.wing {
+         left: auto;
+         right: 43%;
+         transform: scaleX(-1) rotate(-10deg);
+      }
+
+      /* STEP 3 | HEAD, NECK AND FACE
+   Start with a circle. clip-path cuts a flat edge where the hat sits.
+   The clip extends below the circle to leave room for the neck. */
+      .head {
+         width: 19%;
+         height: 19%;
+         border-radius: 50%;
+         background: var(--brown2);
+         top: 15%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         clip-path: polygon(0% 20%, 100% 20%, 100% 500%, 0% 500%);
+      }
+
+      /* content: "" creates a box for the neck. It starts 80% down the head
+   so the two shapes overlap. The same brown fills the join, and the
+   last two corner radii round off the bottom. Refresh here. */
+      .head::before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 40%;
+         height: 120%;
+         background: var(--brown2);
+         top: 80%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         border-radius: 0 0 100% 100% / 30%;
+      }
+
+      /* Draw one black dot 2.5vmin left of center. With zero blur, its shadow
+   makes a second dot 5vmin to the right, so the eyes are evenly spaced. */
+      .eye {
+         width: 10%;
+         height: 10%;
+         background: black;
+         border-radius: 50%;
+         top: 45%;
+         left: 50%;
+         transform: translate(-50%, 0) translate(-2.5vmin, 0);
+         box-shadow: 5vmin 0
+      }
+
+      /* The top and bottom borders are transparent. They taper the orange
+   left border into a triangle that points to the right. */
+      .beak {
+         width: 4vmin;
+         height: 3vmin;
+         border-left: 4vmin solid var(--orange1);
+         border-top: 1.5vmin solid transparent;
+         border-bottom: 1.5vmin solid transparent;
+         top: 60%;
+         left: 50%;
+      }
+
+      /* The snood starts at the same center line as the beak. Shifting it
+   left by its full width places it just to the left of that line. */
+      .red {
+         width: 2.5vmin;
+         height: 6vmin;
+         background: #d00;
+         border-radius: 100% / 100% 0 100% 100%;
+         top: 60%;
+         left: 50%;
+         transform: translate(-100%, 0);
+      }
+
+      /* STEP 4 | LEGS AND TOES
+   Start both legs at the center and shift them 4vmin in opposite
+   directions. The repeating gradient adds thin stripes over the orange. */
+      .leg {
+         width: 3%;
+         height: 21%;
+         background: var(--orange1);
+         top: 79%;
+         left: 50%;
+         transform: translate(-50%, 0) translate(-4vmin, 0);
+         border-radius: 5vmin / 50%;
+         background-image:
+            repeating-linear-gradient(transparent 0 10%, rgba(0, 0, 0, 0.1) 0 11%);
+      }
+
+      .leg+.leg {
+         transform: translate(-50%, 0) translate(4vmin, 0);
+      }
+
+      /* Each leg gets two toes from the same rule. Both pivot at the top
+   center so they stay attached as they rotate. The final rule turns
+   the second toe the opposite way so the toes spread apart. */
+      .leg::before,
+      .leg::after {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 80%;
+         height: 35%;
+         left: 50%;
+         bottom: 0;
+         background: var(--orange1);
+         border-radius: 5vmin;
+         transform-origin: 50% 0;
+         transform: translate(-50%, 0) rotate(30deg);
+      }
+
+      .leg::after {
+         transform: translate(-50%, 0) rotate(-30deg);
+      }
+
+      /* STEP 5 | HAT
+   Start with a wide, short oval for the brim. The inset shadow stays
+   inside the crown and paints the lighter band across the bottom. */
+      .hat-bottom {
+         width: 35%;
+         height: 8%;
+         border-radius: 50%;
+         background: black;
+         top: 15%;
+         left: 50%;
+         transform: translate(-50%, 0);
+      }
+
+      .hat-top {
+         width: 16%;
+         height: 20%;
+         background: black;
+         box-shadow: inset 0 -7vmin #fff3;
+         border-radius: 100% / 230% 230% 0% 0%;
+         top: 0;
+         left: 50%;
+         transform: translate(-50%, 0);
+      }
+
+      /* A small bordered box makes the buckle. Its position is measured
+   from the crown, so it follows the hat if the hat moves. */
+      .hat-top::before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 40%;
+         height: 2vmin;
+         border: 1vmin solid #772;
+         border-radius: 1vmin;
+         bottom: 3.25vmin;
+         left: 50%;
+         transform: translate(-50%, 0);
+      }
+
+      /* STEP 6 | ALL 13 TAIL FEATHERS
+   All 13 feathers overlap until their angles differ. The feather divs
+   come first in the HTML, so the rest of the turkey paints over them. */
+      .tail {
+         width: 10%;
+         height: 40%;
+         background-color: var(--army-green);
+         background-image: url("assets/camo.jpg");
+         background-size: cover;
+         background-position: center;
+         border: 0.45vmin solid #171b14;
+         border-radius: 100% / 30% 30% 170% 170%;
+         /* Put the pivot at the center of the bottom edge so the tips fan out
+    while the bases stay together. */
+         transform-origin: 50% 100%;
+         top: 30%;
+         left: 50%;
+         transform: translate(-50%, 0);
+      }
+
+      /* nth-child counts all children of .cartoon in HTML order. Since the
+   feathers come first, odd and even alternate the feather colors. */
+      .tail:nth-child(odd) {
+         background-position: 35% center;
+      }
+
+      .tail:nth-child(even) {
+         background-position: 70% center;
+      }
+
+      /* Each transform replaces the base transform, so keep translate to
+   center every feather on the same line. One upright feather and pairs
+   of equal positive and negative angles make a symmetric fan.
+   Add the 17deg rule first and toggle transform-origin in DevTools. */
+      .tail:nth-child(1) {
+         transform: translate(-50%, 0) rotate(0);
+      }
+
+      .tail:nth-child(2) {
+         transform: translate(-50%, 0) rotate(17deg);
+      }
+
+      .tail:nth-child(3) {
+         transform: translate(-50%, 0) rotate(34deg);
+      }
+
+      .tail:nth-child(4) {
+         transform: translate(-50%, 0) rotate(51deg);
+      }
+
+      .tail:nth-child(5) {
+         transform: translate(-50%, 0) rotate(68deg);
+      }
+
+      .tail:nth-child(6) {
+         transform: translate(-50%, 0) rotate(85deg);
+      }
+
+      .tail:nth-child(7) {
+         transform: translate(-50%, 0) rotate(102deg);
+      }
+
+      .tail:nth-child(8) {
+         transform: translate(-50%, 0) rotate(-17deg);
+      }
+
+      .tail:nth-child(9) {
+         transform: translate(-50%, 0) rotate(-34deg);
+      }
+
+      .tail:nth-child(10) {
+         transform: translate(-50%, 0) rotate(-51deg);
+      }
+
+      .tail:nth-child(11) {
+         transform: translate(-50%, 0) rotate(-68deg);
+      }
+
+      .tail:nth-child(12) {
+         transform: translate(-50%, 0) rotate(-85deg);
+      }
+
+      .tail:nth-child(13) {
+         transform: translate(-50%, 0) rotate(-102deg);
+      }
+
+      /* Army uniform */
+      body::before {
+         content: "";
+         position: fixed;
+         inset: 0;
+         background:
+            linear-gradient(transparent 68%, rgba(70, 51, 35, 0.35) 68%);
+         pointer-events: none;
+      }
+
+      .body {
+         background:
+            repeating-linear-gradient(45deg, transparent 0 3vmin, rgba(255, 255, 255, 0.04) 3vmin 5vmin),
+            var(--army-green);
+         color: var(--army-green);
+         z-index: 3;
+      }
+
+      .wing {
+         background: var(--army-green);
+         z-index: 4;
+      }
+
+      .leg {
+         width: 4.2%;
+         height: 20%;
+         background: var(--army-dark);
+         border: 0.35vmin solid #151811;
+         border-radius: 2vmin 2vmin 1vmin 1vmin;
+         z-index: 2;
+      }
+
+      .leg::before,
+      .leg::after {
+         height: 28%;
+         width: 175%;
+         background: #1f241c;
+         border-radius: 2vmin 2vmin 0.6vmin 0.6vmin;
+         transform-origin: 50% 50%;
+         transform: translate(-50%, 0);
+      }
+
+      .leg::before {
+         bottom: -3%;
+         border: 0.35vmin solid #151811;
+         box-shadow: inset 0 -1.2vmin #151811;
+      }
+
+      .leg::after {
+         display: none;
+      }
+
+      .belt {
+         width: 32%;
+         height: 5%;
+         background: #2b2117;
+         left: 50%;
+         top: 60%;
+         transform: translate(-50%, 0);
+         z-index: 6;
+      }
+
+      .belt-buckle {
+         width: 5%;
+         height: 5.5%;
+         border: 0.8vmin solid #b7a45d;
+         background: #4f4a32;
+         border-radius: 0.7vmin;
+         left: 50%;
+         top: 59.7%;
+         transform: translate(-50%, 0);
+         z-index: 7;
+      }
+
+      .strap {
+         width: 3.2%;
+         height: 31%;
+         background: #1f271c;
+         left: 43%;
+         top: 41%;
+         transform: rotate(-35deg);
+         z-index: 5;
+      }
+
+      .strap+.strap {
+         left: 54%;
+         transform: rotate(35deg);
+      }
+
+      .rank {
+         width: 7%;
+         height: 3.5%;
+         background: #b7a45d;
+         border: 0.35vmin solid #5e5030;
+         border-radius: 0.5vmin;
+         left: 50%;
+         top: 33%;
+         transform: translate(-50%, 0);
+         z-index: 8;
+         box-shadow:
+            -1.4vmin 0 0 -0.9vmin #b7a45d,
+            1.4vmin 0 0 -0.9vmin #b7a45d;
+      }
+
+      .dog-tag {
+         width: 4.5%;
+         height: 7%;
+         background: #9a966e;
+         border: 0.4vmin solid #69633f;
+         border-radius: 50%;
+         left: 50%;
+         top: 49%;
+         transform: translate(-50%, 0);
+         z-index: 7;
+      }
+
+      .hat-top,
+      .hat-bottom {
+         display: none;
+      }
+
+      .helmet {
+         width: 23%;
+         height: 16%;
+         background:
+            radial-gradient(circle at 22% 70%, #596b43 0 1.4vmin, transparent 1.5vmin),
+            radial-gradient(circle at 72% 25%, #596b43 0 1.2vmin, transparent 1.3vmin),
+            #3f5032;
+         border: 0.5vmin solid #1d2519;
+         border-radius: 100% 100% 45% 45% / 100% 100% 20% 20%;
+         top: 7%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         z-index: 12;
+      }
+
+      .helmet-brim {
+         width: 27%;
+         height: 4.5%;
+         background: #283526;
+         border: 0.35vmin solid #161d13;
+         border-radius: 50%;
+         top: 20%;
+         left: 50%;
+         transform: translate(-50%, 0);
+         z-index: 13;
+      }
+
+      .helmet-star {
+         width: 3.5%;
+         height: 3.5%;
+         background: #d1bd67;
+         clip-path: polygon(50% 0, 61% 35%, 100% 38%, 68% 59%, 79% 100%, 50% 72%, 21% 100%, 32% 59%, 0 38%, 39% 35%);
+         left: 50%;
+         top: 12.5%;
+         transform: translate(-50%, 0);
+         z-index: 14;
+      }
+
+      .head {
+         z-index: 10;
+      }
+
+      .rifle {
+         width: 6%;
+         height: 46%;
+         background:
+            linear-gradient(90deg, #171916 0 12%, #444941 12% 38%, #252821 38% 62%, #111310 62% 100%);
+         border: 0.35vmin solid #0d100c;
+         border-radius: 0.8vmin;
+         top: 35%;
+         left: 70%;
+         transform: rotate(-22deg);
+         z-index: 9;
+      }
+
+      .rifle::before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 55%;
+         height: 4%;
+         background: #151713;
+         border: 0.2vmin solid #090a08;
+         border-radius: 0.5vmin;
+         right: -36%;
+         top: 47%;
+         z-index: 4;
+      }
+
+      .rifle .barrel {
+         width: 18%;
+         height: 72%;
+         background:
+            repeating-linear-gradient(90deg, #111 0 0.35vmin, #454943 0.35vmin 0.7vmin);
+         border: 0.25vmin solid #0c0e0b;
+         left: 41%;
+         top: -62%;
+         border-radius: 0.45vmin;
+         box-shadow: inset 0.45vmin 0 #252922;
+      }
+
+      .rifle .muzzle {
+         width: 32%;
+         height: 5%;
+         background: #0a0b09;
+         border: 0.25vmin solid #31352f;
+         border-radius: 0.5vmin;
+         left: 34%;
+         top: -64%;
+         z-index: 3;
+      }
+
+      .rifle .stock {
+         width: 180%;
+         height: 24%;
+         background:
+            linear-gradient(135deg, #5b604f 0 12%, #252922 13% 70%, #11130f 71%);
+         border: 0.35vmin solid #11140f;
+         left: -40%;
+         bottom: -10%;
+         border-radius: 75% 18% 20% 55%;
+         box-shadow: inset 0.8vmin 0.5vmin #777d68;
+      }
+
+      .rifle .grip {
+         width: 75%;
+         height: 25%;
+         background: repeating-linear-gradient(135deg, #20231e 0 0.8vmin, #30342d 0.8vmin 1.2vmin);
+         border: 0.35vmin solid #11140f;
+         border-radius: 20% 20% 60% 60%;
+         left: 13%;
+         bottom: -27%;
+         z-index: 2;
+      }
+
+      .rifle .magazine {
+         width: 65%;
+         height: 24%;
+         background: linear-gradient(90deg, #151713 0 20%, #3a3e35 20% 75%, #171916 75%);
+         border: 0.35vmin solid #0d100c;
+         border-radius: 0.5vmin 0.5vmin 1.2vmin 1.2vmin;
+         left: 18%;
+         bottom: 8%;
+         z-index: 1;
+      }
+
+      .rifle .trigger {
+         width: 40%;
+         height: 12%;
+         border: 0.35vmin solid #090b08;
+         border-top: 0;
+         border-radius: 0 0 70% 70%;
+         left: 30%;
+         bottom: 20%;
+         z-index: 3;
+      }
+
+      .rifle .scope {
+         width: 220%;
+         height: 11%;
+         background: linear-gradient(90deg, #101210 0 8%, #3a4037 8% 92%, #101210 92%);
+         border: 0.3vmin solid #0d0f0d;
+         border-radius: 1vmin;
+         left: -60%;
+         top: 18%;
+         z-index: 2;
+         box-shadow: inset 0 0 0 0.18vmin #5c6654;
+      }
+
+      .rifle .scope::before,
+      .rifle .scope::after {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 25%;
+         height: 165%;
+         background: radial-gradient(circle, #687b74 0 28%, #1a1e19 30% 58%, #090a09 60%);
+         border: 0.25vmin solid #090a09;
+         border-radius: 50%;
+         top: -34%;
+         left: -10%;
+      }
+
+      .rifle .scope::after {
+         left: auto;
+         right: -10%;
+      }
+
+      .rifle .scope-mount {
+         width: 14%;
+         height: 180%;
+         background: #171a16;
+         border: 0.2vmin solid #090a09;
+         left: 24%;
+         top: 100%;
+         z-index: 3;
+         border-radius: 0.3vmin;
+      }
+
+      .rifle .scope-mount + .scope-mount {
+         left: 62%;
+      }
+
+      .rifle .bipod {
+         width: 180%;
+         height: 12%;
+         border-left: 0.45vmin solid #20231e;
+         border-right: 0.45vmin solid #20231e;
+         left: -40%;
+         bottom: 12%;
+         transform: perspective(10vmin) rotateX(35deg);
+         z-index: -1;
+      }
